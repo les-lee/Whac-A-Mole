@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>打地鼠</title>
+
+		<style type="text/css">
+			body {
+				position: relative;
+			}
+			
+			.size {
+				width: 300px;
+				height: 300px;
+				margin: 100px auto;
+			}
+			
+			.control {
+				width: 300px;
+				height: 30px;
+				margin: 0px auto;
+				text-align: center;
+			}
+			
+			.res {
+				text-align: center;
+			}
+			
+			.size>div {
+				margin: 5px;
+				float: left;
+				display: block;
+				width: 50px;
+				height: 50px;
+			}
+			
+			.size>div>img {
+				width: 50px;
+				height: 50px;
+				
+			}
+			
+			.ranking {
+				height: 500px;
+				width: 300px;
+				position: absolute;
+				top: 100px;
+				left: 50px;
+				border: 1px aqua solid;
+				background-color: cornflowerblue;
+				z-index: 2;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<marquee behavior="alternate">打地鼠</marquee>
+
+		<div class="ranking">
+
+		</div>
+		<div class="size">
+
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+			<div><img src="img/bg.jpg" alt="" /></div>
+
+		</div>
+		<div class="control">
+			<input class="start" type="button" name="" id="" value="开始" />
+			<input class="stop" type="button" name="" id="" value="结束" />
+
+		</div>
+		<p class="res">得分:0</p>
+
+	</body>
+
+	<script type="text/javascript">
+		var cards = document.querySelectorAll(".size>div>img");
+		var res = document.querySelector(".res");
+		var startbtn = document.querySelector(".start");
+		var stopbtn = document.querySelector(".stop");
+		var start;
+		var isstart = false;
+		var total = 0;
+		//成绩数组
+		var rankList = [];
+		
+		var itemList = [];
+		//排行榜
+		var totalcount = 10;
+		var count = 0;
+		var ressize = document.querySelector(".ranking");
+
+		for(var i = 0; i < cards.length; i++) {
+
+			cards[i].addEventListener("click", function() {
+				
+				if(!start){
+					return ;
+				}
+				
+				var index = this.src.lastIndexOf("/");
+				if(this.src.substr(index + 1) == "mole.gif") {
+					total++;
+					res.innerText = "得分:" + total;
+					change();
+				} else {
+					total--;
+					res.innerText = "得分:" + total;
+				}
+			});
+		}
+
+		function change() {
+			for(var i = 0; i < cards.length; i++) {
+				cards[i].src = "img/bg.jpg";
+			}
+			var random = parseInt((Math.random() * 100) % 25);
+//			console.log(random);
+			cards[random].src = "img/mole.gif";
+//			console.log(cards[random].src);
+		}
+
+		function startgame() {
+
+			start = setInterval(function() {
+				change();
+			}, 700);
+			isstart = true;
+		}
+
+		function stopgame() {
+			clearInterval(start);
+			start = null;
+		}
+		startbtn.addEventListener("click", function() {
+			res.innerText = "";
+			if(!isstart) {
+				startgame();
+				isstart = true;
+			}
+
+		});
+
+		stopbtn.addEventListener("click", function() {
+			isstart = false;
+			stopgame();
+			
+			addcount();
+			count++;
+		});
+
+		function addcount() {
+			rankList[count] = total;
+			console.log(rankList[count]+ "---"+rankList.length);
+			rankList.sort(function(x, y) {
+				return y - x;
+			});
+			var item = document.createElement("p");
+			itemList[count]=item;
+			ressize.appendChild(item);
+			for(var j = 0; j <= count; j++) {
+				itemList[j].innerText = "第" + (j+1) + "名得分: " + rankList[j];
+			}
+//			localStorage.setItem("rankList",rankList);
+		}
+	</script>
+
+</html>
